@@ -38,4 +38,5 @@ def group_dictize(group):
     return {'id': group.id,
             'name': group.name,
             'title': group.title,
-            'type': group.type}
+            'type': group.type
+            }
