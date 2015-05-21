@@ -31,7 +31,7 @@ class HierarchyDisplay(p.SingletonPlugin):
 
 #import ckan.logic.converters as converters
 
-import ckanext.edc.forms.converters as converters
+import ckanext.bcgov.forms.converters as converters
 cnvrt_to_ext = converters.convert_to_extras;
 cnvrt_from_ext = converters.convert_from_extras;
 from ckan.lib.navl.validators import (ignore_missing)
