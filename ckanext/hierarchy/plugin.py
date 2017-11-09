@@ -7,10 +7,19 @@ from ckan.lib.plugins import DefaultOrganizationForm
 p.toolkit.check_ckan_version(min_version='2.0')
 
 
+# depricated in core, need for some template calls
+def get_action(action_name, data_dict=None):
+    '''Calls an action function from a template.'''
+    if data_dict is None:
+        data_dict = {}
+    return p.toolkit.get_action(action_name)({}, data_dict)
+
+
 class HierarchyDisplay(p.SingletonPlugin):
 
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IActions, inherit=True)
+    p.implements(p.ITemplateHelpers, inherit=True)
 
     # IConfigurer
 
@@ -28,6 +37,11 @@ class HierarchyDisplay(p.SingletonPlugin):
                 'group_tree_section': action.group_tree_section,
                 }
 
+    # ITemplateHelpers
+    def get_helpers(self):
+        return {
+            'hierarchy_get_action': get_action
+        }
 
 #import ckan.logic.converters as converters
 
