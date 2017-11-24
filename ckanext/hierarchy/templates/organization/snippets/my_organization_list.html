@@ -18,7 +18,7 @@ Example:
     		<div class="search-input control-group search-giant">
     			<input id ="js-search" class="search" type="text" name="q" placeholder="Start typing a name..." />
                 	<button type="submit" class="btn btn-default">
-                  		<i class="icon-search"></i>
+                  		<i class="fa fa-search icon-search"></i>
                 	</button>
         	</div>
         	<div class="row row-fluid">
@@ -32,7 +32,7 @@ Example:
 
 {#<div id="publisher-tree"> #}
     {# snippet 'organization/snippets/organization_tree.html', top_nodes=h.get_action('group_tree', {'type': 'organization', 'top_groups' : organizations}) #}
-    {% snippet 'organization/snippets/my_org_list.html', top_orgs=h.get_action('group_tree', {'type': 'organization', 'top_groups' : organizations, 'pkg_count' : pkg_count}), sub_orgs=h.get_action('group_tree', {'type': 'organization', 'top_groups' : sub_organizations, 'pkg_count' : pkg_count}) %}
+    {% snippet 'organization/snippets/my_org_list.html', top_orgs=h.hierarchy_get_action('group_tree', {'type': 'organization', 'top_groups' : organizations, 'pkg_count' : pkg_count}), sub_orgs=h.hierarchy_get_action('group_tree', {'type': 'organization', 'top_groups' : sub_organizations, 'pkg_count' : pkg_count}) %}
 {# </div> #}
 
 
