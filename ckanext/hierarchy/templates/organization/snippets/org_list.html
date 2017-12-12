@@ -6,7 +6,7 @@ This template shows the list of available organization in a searcable tree view.
     {% set orgs = top_orgs %}
     {% for org in orgs recursive %}
     	{% set is_top_org = org['is_top_org'] %}
-    <div class="organization {{ "top-org" if is_top_org }} collapsed">
+    <div class="organization {{ "top-org" if is_top_org }} collapsed" id="{{org.id}}"> 
         {% if org.children %}
             <button class="btn js-expand">
                 <i class="fa fa-plus icon icon-plus"></i>
@@ -25,3 +25,38 @@ This template shows the list of available organization in a searcable tree view.
     </div>
     {% endfor %}
 </div>
+<script type="text/javascript">
+    
+    function setExpand() {
+        document.querySelectorAll(".org-hierarchy .organization").forEach( function(item) {
+            var cookies = getCookie().split(',');
+            if(cookies.indexOf($(item).attr('id')) !== -1 ) {
+                $(item).toggleClass('expanded',true).toggleClass('collapsed',false);
+                
+                // create a delayed scroll to the last opened section (-150 px is to account for header overlap.)
+                clearTimeout(scrollTrigger);
+                scrollTrigger = setTimeout(function(){
+                    $('html, body').animate({ scrollTop: $(item).offset().top-150 }, 200);        
+                }, 100);
+            }
+        });
+        var scrollTrigger = null;   
+    }
+    
+    function getCookie() {
+        var name = 'org_expanded_panels='
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) { return c.substring(name.length, c.length); }
+        }
+        return "";
+    }
+
+    window.onload = setExpand
+
+</script>
