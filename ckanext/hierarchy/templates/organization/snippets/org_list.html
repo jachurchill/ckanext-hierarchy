@@ -28,11 +28,13 @@ This template shows the list of available organization in a searcable tree view.
 <script type="text/javascript">
     
     function setExpand() {
+        var expanded = getCookie('org_expanded_panels').split(',');
+        var org_selected = getCookie('org_last_selected').split(',');
         document.querySelectorAll(".org-hierarchy .organization").forEach( function(item) {
-            var cookies = getCookie().split(',');
-            if(cookies.indexOf($(item).attr('id')) !== -1 ) {
+            if(expanded.indexOf($(item).attr('id')) !== -1 ) {
                 $(item).toggleClass('expanded',true).toggleClass('collapsed',false);
-                
+            }
+            if(org_selected.indexOf($(item).attr('id')) !== -1 ) {
                 // create a delayed scroll to the last opened section (-150 px is to account for header overlap.)
                 clearTimeout(scrollTrigger);
                 scrollTrigger = setTimeout(function(){
@@ -40,11 +42,12 @@ This template shows the list of available organization in a searcable tree view.
                 }, 100);
             }
         });
+
         var scrollTrigger = null;   
     }
     
-    function getCookie() {
-        var name = 'org_expanded_panels='
+    function getCookie(name) {
+        var name = name+'=';
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
         for(var i = 0; i <ca.length; i++) {
