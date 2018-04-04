@@ -101,6 +101,19 @@ $(function() {
   // -- Init base form
   $('input[name="q"]').focus();
   
+  // -- Org Clicked Cookie (on page load if this cookie exists then scroll to that parent)
+  $('.org-row > a ').click(function(e) {
+    var parent = e.target
+    var exit = false;
+    while(parent && !exit) {
+      exit = parent.classList.contains("top-org")
+      if(exit) {
+        setCookie('org_last_selected', $(parent).attr('id'));
+      }
+      parent = parent.parentElement;
+    }
+  });
+
   // -- Handle expand/collapse
   $('.js-expand,.js-collapse').click(function(e) {
     e.preventDefault();
