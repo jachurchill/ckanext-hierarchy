@@ -6,7 +6,7 @@ This template shows the list of available organization in a searcable tree view.
     {% set orgs = top_orgs %}
     {% for org in orgs recursive %}
     	{% set is_top_org = org['is_top_org'] %}
-    <div class="organization {{ "top-org" if is_top_org }} collapsed" id="{{org.id}}"> 
+    <div class="organization {{ "top-org" if is_top_org else "collapsed" }} {{ "expanded" if expand_top else "collapsed" }}" id="{{org.id}}">
         {% if org.children %}
             <button class="btn js-expand">
                 <i class="fa fa-plus icon icon-plus"></i>

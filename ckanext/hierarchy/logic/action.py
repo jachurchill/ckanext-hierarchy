@@ -9,6 +9,8 @@ import ckan.plugins.toolkit as toolkit
 from ckan.common import  c
 from ckanext.hierarchy.model import GroupTreeNode
 
+from ckanext.bcgov.util.helpers import is_current_user_admin
+
 
 log = logging.getLogger(__name__)
 _get_or_bust = logic.get_or_bust
@@ -24,9 +26,14 @@ def group_tree(context, data_dict):
     group_type = data_dict.get('type', 'group')
     top_level_groups = data_dict['top_groups']
     pkg_count = data_dict.get('pkg_count')
-    return [_group_tree_branch(group, pkg_count, type=group_type) for group in top_level_groups]
 
-    
+    if is_current_user_admin():
+        return [_group_tree_branch(group, pkg_count, type=group_type, expand_top=True) for group in top_level_groups]
+    else:
+        ret_groups = []
+        for top_group in top_level_groups:
+            ret_groups += top_group.get_children_groups(type=group_type)
+        return [_group_tree_branch(group, pkg_count, type=group_type) for group in ret_groups]
 
 
 @logic.side_effect_free
@@ -58,9 +65,7 @@ def group_tree_section(context, data_dict):
                               type=group_type)
 
 
-
-
-def _group_tree_branch(root_group, pkg_count, highlight_group_name=None, type='group'):
+def _group_tree_branch(root_group, pkg_count, highlight_group_name=None, type='group', expand_top=False):
     '''Returns a branch of the group tree hierarchy, rooted in the given group.
 
     :param root_group_id: group object at the top of the part of the tree
@@ -80,7 +85,8 @@ def _group_tree_branch(root_group, pkg_count, highlight_group_name=None, type='g
          'pkg_num': str(root_count),
          'name': root_group.name,
          'title': root_group.title,
-         'is_top_org' : True})
+         'is_top_org': True,
+         'expand_top': expand_top})
     if root_group.name == highlight_group_name:
         nodes[root_group.id].highlight()
         highlight_group_name = None
@@ -88,12 +94,14 @@ def _group_tree_branch(root_group, pkg_count, highlight_group_name=None, type='g
             root_group.get_children_group_hierarchy(type=type):
         pkg_num = pkg_count.get(group_name, 0)
         node = GroupTreeNode({'id': group_id,
-                             'pkg_num': str(pkg_num),
+                              'pkg_num': str(pkg_num),
                               'name': group_name,
                               'title': group_title,
-                              'is_top_org' : False})
+                              'is_top_org': False,
+                              'expand_top': False})
         nodes[parent_id].add_child_node(node)
         if highlight_group_name and group_name == highlight_group_name:
             node.highlight()
         nodes[group_id] = node
+    log.info("Root Node: {0}".format(root_node))
     return root_node
