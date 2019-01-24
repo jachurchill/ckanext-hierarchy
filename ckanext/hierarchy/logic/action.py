@@ -33,6 +33,7 @@ def group_tree(context, data_dict):
         ret_groups = []
         for top_group in top_level_groups:
             ret_groups += top_group.get_children_groups(type=group_type)
+        ret_groups.sort(key=lambda x: x.name, reverse=False)
         return [_group_tree_branch(group, pkg_count, type=group_type) for group in ret_groups]
 
 

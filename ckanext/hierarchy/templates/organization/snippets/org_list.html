@@ -1,11 +1,12 @@
 {#
-This template shows the list of available organization in a searcable tree view.
+This template shows the list of available organization in a searchable tree view.
 #}
 
 <div class="org-hierarchy no-search">
     {% set orgs = top_orgs %}
     {% for org in orgs recursive %}
     	{% set is_top_org = org['is_top_org'] %}
+        {% set expand_top = org['expand_top'] %}
     <div class="organization {{ "top-org" if is_top_org else "collapsed" }} {{ "expanded" if expand_top else "collapsed" }}" id="{{org.id}}">
         {% if org.children %}
             <button class="btn js-expand">
